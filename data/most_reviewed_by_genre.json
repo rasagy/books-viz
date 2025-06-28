@@ -1,0 +1,8 @@
+[
+  {"genre": "Fantasy", "title": "A Court of Thorns and Roses", "reviews": 350250},
+  {"genre": "Young Adult", "title": "The Hunger Games", "reviews": 280500},
+  {"genre": "Romance", "title": "The Love Hypothesis", "reviews": 220100},
+  {"genre": "Science Fiction", "title": "Dune", "reviews": 180300},
+  {"genre": "Mystery", "title": "The Guest List", "reviews": 150450},
+  {"genre": "Historical Fiction", "title": "The Nightingale", "reviews": 120800}
+]

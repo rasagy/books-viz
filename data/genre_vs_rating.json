@@ -1,0 +1,12 @@
+[
+  {"genre": "Fantasy", "avg_rating": 4.35, "popularity": 5500000},
+  {"genre": "Science Fiction", "avg_rating": 4.20, "popularity": 4200000},
+  {"genre": "Mystery", "avg_rating": 4.05, "popularity": 3800000},
+  {"genre": "Romance", "avg_rating": 3.95, "popularity": 4500000},
+  {"genre": "Thriller", "avg_rating": 4.10, "popularity": 4000000},
+  {"genre": "Historical Fiction", "avg_rating": 4.15, "popularity": 3200000},
+  {"genre": "Young Adult", "avg_rating": 4.00, "popularity": 6000000},
+  {"genre": "Nonfiction", "avg_rating": 4.25, "popularity": 2800000},
+  {"genre": "Contemporary", "avg_rating": 3.85, "popularity": 3500000},
+  {"genre": "Horror", "avg_rating": 3.90, "popularity": 1500000}
+]

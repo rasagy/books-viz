@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodreads Data Stories</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#most-reviewed">Most Reviewed by Genre</a></li>
+                <li><a href="#top-vs-most-rated">Top vs. Most Rated</a></li>
+                <li><a href="#genre-popularity">Genre Popularity vs. Ratings</a></li>
+                <li><a href="#hidden-gems">Hidden Gems</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="most-reviewed">
+            <h2>Most-Reviewed Books by Each Genre</h2>
+            <p>Discover which books are sparking the most conversations across different genres.</p>
+            <div class="chart-container">
+                <canvas id="mostReviewedChart" aria-label="Bar chart showing the most reviewed books by genre" role="img"></canvas>
+            </div>
+        </section>
+
+        <section id="top-vs-most-rated">
+            <h2>Top-Rated vs. Most-Rated Books</h2>
+            <p>Are the books with the highest ratings also the ones everyone is reading? Let's find out.</p>
+            <div class="chart-container-grid">
+                <div class="chart-container">
+                    <h3>Top Rated</h3>
+                    <canvas id="topRatedChart" aria-label="Bar chart showing top rated books" role="img"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Most Rated</h3>
+                    <canvas id="mostRatedChart" aria-label="Bar chart showing most rated books" role="img"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="genre-popularity">
+            <h2>Genre Popularity vs. Ratings</h2>
+            <p>Explore the relationship between a genre's average rating and its overall popularity.</p>
+            <div class="chart-container">
+                <canvas id="genrePopularityChart" aria-label="Scatter plot showing genre popularity versus average ratings" role="img"></canvas>
+            </div>
+        </section>
+
+        <section id="hidden-gems">
+            <h2>Hidden Gems: High Rating, Low Visibility</h2>
+            <p>Unearth highly-rated books that haven't hit the mainstream radar yet.</p>
+            <div class="chart-container">
+                <canvas id="hiddenGemsChart" aria-label="Scatter plot showing hidden gems: books with high ratings and low review counts" role="img"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Data sourced from Goodreads. Visualizations by AI.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
