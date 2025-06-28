@@ -3,26 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Data Scatter Plots</title>
+    <title>The Anatomy of a Bestseller: A Data Dive into GoodReads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body { font-family: "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #f9f9f9; color: #333; }
-        .chart-container { width: 95%; max-width: 800px; margin: 20px auto; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        svg { display: block; width: 100%; height: 350px; }
-        .axis path, .axis line { fill: none; stroke: #ccc; shape-rendering: crispEdges; }
-        .axis text { font-size: 10px; fill: #555; }
-        .grid line { stroke: #e0e0e0; stroke-opacity: 0.7; shape-rendering: crispEdges; }
-        .tooltip { position: absolute; text-align: center; width: auto; padding: 5px; font: 10px sans-serif; background: lightsteelblue; border: 0px; border-radius: 3px; pointer-events: none; opacity: 0; }
-        .trendline { fill: none; stroke: orange; stroke-width: 2px; }
-        footer { text-align: center; padding: 15px; font-size: 0.9em; color: #777; margin-top: 20px; }
-        footer a { color: steelblue; text-decoration: none; }
+        body {
+            font-family: "Lato", "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            background-color: #f8f8f8;
+            color: #333333; /* Dark gray for text */
+            padding-top: 10px; /* Add some space at the top */
+        }
+        .chart-title {
+            font-family: "Lora", serif;
+            font-size: 1.6em; /* Slightly larger */
+            font-weight: 700;
+            text-align: center;
+            margin-top: 50px; /* More space above title */
+            margin-bottom: 15px; /* More space below title */
+            color: #222222; /* Slightly darker for titles */
+        }
+        .chart-container {
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto 40px auto; /* Centered, more space below each chart */
+            background-color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08); /* Softer shadow */
+        }
+        svg {
+            display: block;
+            width: 100%;
+            height: 350px;
+            font-family: "Lato", sans-serif; /* Ensure SVG text uses Lato */
+        }
+        .axis path, .axis line {
+            fill: none;
+            stroke: #bbbbbb; /* Slightly darker axis lines */
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-size: 11px; /* Slightly larger axis text */
+            fill: #555555;
+            font-family: "Lato", sans-serif;
+        }
+        .grid line {
+            stroke: #e0e0e0; /* Maintained light grid lines */
+            stroke-opacity: 0.6;
+            shape-rendering: crispEdges;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: auto;
+            padding: 8px; /* More padding */
+            font: 11px "Lato", sans-serif;
+            background: rgba(40, 40, 40, 0.85); /* Darker tooltip */
+            color: white;
+            border: 0px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .trendline {
+            fill: none;
+            stroke: orange;
+            stroke-width: 2.5px; /* Slightly thicker trendline */
+        }
+        .annotation { /* Style for D3-added annotations */
+            font-family: "Lato", sans-serif;
+            font-size: 10.5px;
+            fill: #444444;
+            text-anchor: middle;
+        }
+        .annotation-line { /* Optional: for lines from annotation text to point */
+            stroke: #666666;
+            stroke-width: 1px;
+            stroke-dasharray: 2,2;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            color: #666666;
+            margin-top: 30px;
+            font-family: "Lato", sans-serif;
+        }
+        footer a {
+            color: steelblue;
+            text-decoration: none;
+        }
         footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
+<div class="chart-title" id="title1"></div>
 <div id="plot1" class="chart-container"></div>
+<div class="chart-title" id="title2"></div>
 <div id="plot2" class="chart-container"></div>
+<div class="chart-title" id="title3"></div>
 <div id="plot3" class="chart-container"></div>
 
 <footer>
@@ -36,25 +116,75 @@
     async function fetchDataAndDraw() {
         const data = await d3.json("scatter_data.json");
 
+        // Define plot configurations including new titles and annotation callbacks
         const plots = [
-            { id: "#plot1", xVal: d => d.pages, yVal: d => d.rating, xLabel: "Pages", yLabel: "Rating" },
-            { id: "#plot2", xVal: d => d.blurb, yVal: d => d.rating, xLabel: "Blurb Length", yLabel: "Rating" },
-            { id: "#plot3", xVal: d => d.reviews > 0 ? Math.log10(d.reviews) : 0, yVal: d => d.rating, xLabel: "log₁₀(Reviews)", yLabel: "Rating" }
+            {
+                titleId: "#title1", chartId: "#plot1",
+                xVal: d => d.pages, yVal: d => d.rating,
+                xLabel: "Book Length (Pages)", yLabel: "Average Rating",
+                titleText: "The Long Read: Does Book Length Influence Reader Ratings?",
+                addAnnotations: (svg, data, x, y, width, height) => {
+                    // Annotation 1: Dense area for highly rated books
+                    svg.append("text")
+                       .attr("class", "annotation")
+                       .attr("x", x(350)) // Approximate page count
+                       .attr("y", y(4.6))  // Approximate rating
+                       .text("Sweet spot: Many highly-rated books cluster here (250-450 pages).")
+                       .attr("dx", -5) .attr("dy", -10) .style("text-anchor", "end");
+                }
+            },
+            {
+                titleId: "#title2", chartId: "#plot2",
+                xVal: d => d.blurb, yVal: d => d.rating,
+                xLabel: "Blurb Length (Characters)", yLabel: "Average Rating",
+                titleText: "Judging a Book by its Blurb: The Link Between Description Length and Acclaim",
+                addAnnotations: (svg, data, x, y, width, height) => {
+                     // Annotation 1: General trend observation
+                    svg.append("text")
+                       .attr("class", "annotation")
+                       .attr("x", width / 2)
+                        .attr("y", y(y.domain()[1]) + 15) // Positioned near top, inside plot area
+                       .text("Ratings show wide variance regardless of blurb length.")
+                       .style("text-anchor", "middle");
+                }
+            },
+            {
+                titleId: "#title3", chartId: "#plot3",
+                xVal: d => d.reviews > 0 ? Math.log10(d.reviews) : 0, yVal: d => d.rating,
+                xLabel: "log₁₀(Number of Reviews)", yLabel: "Average Rating",
+                titleText: "The Roar of the Crowd: How Review Volume Shapes Perceived Quality",
+                addAnnotations: (svg, data, x, y, width, height) => {
+                    // Annotation 1: High reviews, high ratings
+                    const highReviewsHighRating = data.find(d => (d.reviews > 0 ? Math.log10(d.reviews) : 0) > 4 && d.rating > 4.5);
+                    if(highReviewsHighRating){
+                        svg.append("text")
+                           .attr("class", "annotation")
+                           .attr("x", x(Math.log10(highReviewsHighRating.reviews)))
+                           .attr("y", y(highReviewsHighRating.rating) - 10)
+                           .text("Heavily reviewed books often highly rated")
+                           .style("text-anchor", "middle");
+                    }
+                }
+            }
         ];
 
-        plots.forEach(p => createPlot(data, p.id, p.xVal, p.yVal, p.xLabel, p.yLabel));
+        plots.forEach(p => {
+            d3.select(p.titleId).text(p.titleText); // Set the chart title
+            createPlot(data, p.chartId, p.xVal, p.yVal, p.xLabel, p.yLabel, p.addAnnotations);
+        });
 
         window.addEventListener('resize', () => {
             plots.forEach(p => {
-                d3.select(p.id).select("svg").remove();
-                createPlot(data, p.id, p.xVal, p.yVal, p.xLabel, p.yLabel);
+                d3.select(p.chartId).select("svg").remove(); // Clear existing SVG
+                // No need to re-set title here as it's static
+                createPlot(data, p.chartId, p.xVal, p.yVal, p.xLabel, p.yLabel, p.addAnnotations);
             });
         });
     }
 
-    function createPlot(data, selector, xValue, yValue, xLabelText, yLabelText) {
-        const container = d3.select(selector);
-        if (container.node() === null) { console.error("Container not found:", selector); return; }
+    function createPlot(data, chartSelector, xValue, yValue, xLabelText, yLabelText, addAnnotationsCallback) {
+        const container = d3.select(chartSelector);
+        if (container.node() === null) { console.error("Container not found:", chartSelector); return; }
 
         const containerWidth = container.node().getBoundingClientRect().width;
         const width = containerWidth - MARGIN.left - MARGIN.right;
@@ -96,18 +226,22 @@
 
         // Axis labels
         svg.append("text")
-            .attr("text-anchor", "end")
-            .attr("x", width / 2 + MARGIN.left /2)
-            .attr("y", height + MARGIN.bottom -5)
-            .style("font-size", "11px")
+            .attr("class", "axis-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + MARGIN.bottom - 10) // Adjusted y position
+            .style("font-size", "12px") // Slightly larger
+            .style("font-weight", "bold")
             .text(xLabelText);
 
         svg.append("text")
-            .attr("text-anchor", "end")
+            .attr("class", "axis-label")
+            .attr("text-anchor", "middle")
             .attr("transform", "rotate(-90)")
-            .attr("y", -MARGIN.left + 15)
-            .attr("x", -height / 2 + MARGIN.top)
-            .style("font-size", "11px")
+            .attr("y", -MARGIN.left + 18) // Adjusted y position
+            .attr("x", -height / 2)
+            .style("font-size", "12px") // Slightly larger
+            .style("font-weight", "bold")
             .text(yLabelText);
 
         // Tooltip
@@ -165,6 +299,11 @@
                 .datum(movingAverageData)
                 .attr("class", "trendline")
                 .attr("d", trend);
+        }
+
+        // Call the annotation callback function
+        if (addAnnotationsCallback) {
+            addAnnotationsCallback(svg, data, x, y, width, height);
         }
     }
 
