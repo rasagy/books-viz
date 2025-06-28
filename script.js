@@ -195,88 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Top-Rated vs. Most-Rated Books (Two side-by-side horizontal bar charts)
-    async function renderTopRatedChart() {
-        const data = await fetchData('data/top_rated_books.json');
-        if (!data) return;
-
-        const ctx = document.getElementById('topRatedChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.map(book => book.title),
-                datasets: [{
-                    label: 'Average Rating',
-                    data: data.map(book => book.rating),
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                ...defaultChartOptions,
-                indexAxis: 'y',
-                 scales: {
-                    ...defaultChartOptions.scales,
-                    x: {
-                        ...defaultChartOptions.scales.x,
-                        title: {
-                            display: true,
-                            text: 'Average Rating (out of 5)',
-                            color: '#333',
-                            font: { size: 14, weight: 'bold'}
-                        },
-                        min: Math.min(...data.map(b => b.rating)) > 4 ? 4 : 0, // Adjust min for rating scale
-                        max: 5
-                    }
-                },
-                plugins: { ...defaultChartOptions.plugins, legend: { display: false } }
-            }
-        });
-    }
-
-    async function renderMostRatedChart() {
-        const data = await fetchData('data/most_rated_books.json');
-        if (!data) return;
-
-        const ctx = document.getElementById('mostRatedChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.map(book => book.title),
-                datasets: [{
-                    label: 'Total Ratings',
-                    data: data.map(book => book.totalratings),
-                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                ...defaultChartOptions,
-                indexAxis: 'y',
-                scales: {
-                    ...defaultChartOptions.scales,
-                    x: {
-                        ...defaultChartOptions.scales.x,
-                        title: {
-                            display: true,
-                            text: 'Total Number of Ratings',
-                            color: '#333',
-                            font: { size: 14, weight: 'bold'}
-                        },
-                        ticks: {
-                             ...defaultChartOptions.scales.x.ticks,
-                            callback: function(value) {
-                                return value >= 1000000 ? (value / 1000000) + 'M' : (value >= 1000 ? (value/1000) + 'k' : value);
-                            }
-                        }
-                    }
-                },
-                plugins: { ...defaultChartOptions.plugins, legend: { display: false } }
-            }
-        });
-    }
+    // 2. Top-Rated vs. Most-Rated Books (REMOVED)
+    // async function renderTopRatedChart() { ... }
+    // async function renderMostRatedChart() { ... }
 
     // 3. Genre Popularity vs. Ratings (Scatter Plot)
     async function renderGenrePopularityChart() {
@@ -451,8 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize all charts
     renderMostReviewedChart();
-    //renderTopRatedChart();
-    //renderMostRatedChart();
+    // renderTopRatedChart(); // Removed
+    // renderMostRatedChart(); // Removed
     renderGenrePopularityChart();
     renderHiddenGemsChart();
 
