@@ -451,8 +451,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize all charts
     renderMostReviewedChart();
-    renderTopRatedChart();
-    renderMostRatedChart();
+    //renderTopRatedChart();
+    //renderMostRatedChart();
     renderGenrePopularityChart();
     renderHiddenGemsChart();
 
